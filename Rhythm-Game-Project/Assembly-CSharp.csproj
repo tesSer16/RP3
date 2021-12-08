@@ -55,6 +55,9 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\NoteBehavior.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\NoteController.cs" />
+    <Compile Include="Assets\Scripts\ObjectPooler.cs" />
+    <Compile Include="Assets\Scripts\Info.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
