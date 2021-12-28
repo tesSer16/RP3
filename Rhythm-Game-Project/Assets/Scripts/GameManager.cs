@@ -34,6 +34,10 @@ public class GameManager : MonoBehaviour
         {
             trailRenderers[i] = trails[i].GetComponent<Renderer>();
         }
+
+        GameObject pline;
+        pline = GameObject.Find("Perfect Line");
+        Debug.Log(pline.gameObject.transform.position);
     }
 
     public GameObject noteObjectPooler;

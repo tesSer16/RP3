@@ -15,6 +15,7 @@ public class NoteBehavior : MonoBehaviour
     public void judgement()
     {
         int judgeValue = Info.order - Info.Chart[trail].Peek();
+        Vector3 pos;
         if (judgeValue == 0)
         {
             judge = GameManager.judges.PERFECT;
@@ -23,6 +24,10 @@ public class NoteBehavior : MonoBehaviour
                 // KeySoundManager.instance.audioSource.Play();
                 GameManager.instance.processJudge(judge);
                 Info.Chart[trail].Dequeue(); // record?
+
+                pos = this.gameObject.transform.position;
+                Debug.Log(pos);
+
                 gameObject.SetActive(false);
             }
         }
@@ -42,7 +47,12 @@ public class NoteBehavior : MonoBehaviour
     public void Judge()
     {
         GameManager.instance.processJudge(judge);
-        if (judge != GameManager.judges.NONE) gameObject.SetActive(false);
+        if (judge != GameManager.judges.NONE)
+        {
+            Debug.Log("check");
+            gameObject.SetActive(false);
+        } 
+            
     }
 
     void Update()

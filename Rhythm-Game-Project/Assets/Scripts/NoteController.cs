@@ -20,7 +20,7 @@ public class NoteController : MonoBehaviour
     public GameObject[] Notes;
     private ObjectPooler noteObjectPooler;
     private List<Note> notes = new List<Note>();
-    private float x, z, startY = 170.0f;
+    private float x, z, startY;
 
     private float time = 0;
     private bool finished = false;
@@ -39,6 +39,7 @@ public class NoteController : MonoBehaviour
         GameObject obj = noteObjectPooler.getObject(note.trail);
         x = obj.transform.position.x;
         z = obj.transform.position.z;
+        startY = 180.0f;
         obj.transform.position = new Vector3(x, startY, z);
         obj.GetComponent<NoteBehavior>().Initialize();
         obj.SetActive(true);
