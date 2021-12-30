@@ -4,42 +4,42 @@ using UnityEngine;
 
 public class NoteBehavior : MonoBehaviour
 {
-    public int noteType;
-    public int trail;
     public GameManager.judges judge;
+    private float start;
 
     public void Initialize()
     {
         judge = GameManager.judges.NONE;
+        start = Time.time;
     }
-    public void judgement()
+    private void OnTriggerEnter(Collider other)
     {
-        int judgeValue = Info.order - Info.Chart[trail].Peek();
-        Vector3 pos;
-        if (judgeValue == 0)
+        if (other.tag == "Perfect")
         {
             judge = GameManager.judges.PERFECT;
             if (GameManager.instance.automode)
             {
-                // KeySoundManager.instance.audioSource.Play();
+                //KeySoundManager.instance.audioSource.Play();
                 GameManager.instance.processJudge(judge);
-                Info.Chart[trail].Dequeue(); // record?
-
-                pos = this.gameObject.transform.position;
-                Debug.Log(pos);
-
                 gameObject.SetActive(false);
             }
+            //Debug.Log(other.tag);
         }
-        else if (Mathf.Abs(judgeValue) <= 1)
+        else if (other.tag == "Good")
+        {
+            //Debug.Log(other.tag);
             judge = GameManager.judges.GOOD;
-        else if (Mathf.Abs(judgeValue) <= 2)
+        }            
+        else if (other.tag == "Bad")
+        {
+            //Debug.Log(other.tag);
             judge = GameManager.judges.BAD;
-        else if (judgeValue >= 3)
+        }            
+        else if (other.tag == "Miss")
         {
             judge = GameManager.judges.MISS;
+            //Debug.Log(other.tag);
             GameManager.instance.processJudge(judge);
-            Info.Chart[trail].Dequeue(); // record?
             gameObject.SetActive(false);
         }
     }
@@ -49,7 +49,6 @@ public class NoteBehavior : MonoBehaviour
         GameManager.instance.processJudge(judge);
         if (judge != GameManager.judges.NONE)
         {
-            Debug.Log("check");
             gameObject.SetActive(false);
         } 
             
@@ -57,8 +56,6 @@ public class NoteBehavior : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.down * GameManager.instance.noteSpeed);
-        judgement();
-
+        transform.Translate(Vector3.down * GameManager.instance.noteSpeed * Time.deltaTime * 10);
     }
 }

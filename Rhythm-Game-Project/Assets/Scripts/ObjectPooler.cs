@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectPooler : MonoBehaviour
 {
-    public List<GameObject> Notes;
+    public GameObject Note;
     private List<List<GameObject>> NotePools;
     public int noteCount = 10;
     private bool more = true;
@@ -12,12 +12,12 @@ public class ObjectPooler : MonoBehaviour
     void Start()
     {
         NotePools = new List<List<GameObject>>();
-        for (int i = 0; i< Notes.Count; i++)
+        for (int i = 0; i< 4; i++)
         {
             NotePools.Add(new List<GameObject>());
             for (int j = 0; j < noteCount; j++)
             {
-                GameObject obj = Instantiate(Notes[i]);
+                GameObject obj = Instantiate(Note);
                 obj.SetActive(false);
                 NotePools[i].Add(obj);
             }
@@ -45,7 +45,7 @@ public class ObjectPooler : MonoBehaviour
         }
         if (more)
         {
-            GameObject obj = Instantiate(Notes[trail]);
+            GameObject obj = Instantiate(Note);
             NotePools[trail].Add(obj);
             return obj;
         }

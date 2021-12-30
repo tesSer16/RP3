@@ -35,9 +35,20 @@ public class GameManager : MonoBehaviour
             trailRenderers[i] = trails[i].GetComponent<Renderer>();
         }
 
-        GameObject pline;
-        pline = GameObject.Find("Perfect Line");
-        Debug.Log(pline.gameObject.transform.position);
+        GameObject p, g1, g2, b1, b2, m;
+        p = GameObject.Find("Perfect Line");
+        g1 = GameObject.Find("Good Line (1)");
+        g2 = GameObject.Find("Good Line (2)");
+        b1 = GameObject.Find("Bad Line (1)");
+        b2 = GameObject.Find("Bad Line (2)");
+        m = GameObject.Find("Miss Line");
+        
+        b1.transform.Translate(Vector3.left * (1.0f * noteSpeed));
+        g1.transform.Translate(Vector3.left * (0.5f * noteSpeed));
+        p.transform.Translate(Vector3.left * (0.15f * noteSpeed));
+        g2.transform.Translate(Vector3.right * (0.15f * noteSpeed));
+        b2.transform.Translate(Vector3.right * (0.5f * noteSpeed));
+        m.transform.Translate(Vector3.right * (1.0f * noteSpeed));
     }
 
     public GameObject noteObjectPooler;

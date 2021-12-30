@@ -17,7 +17,6 @@ public class NoteController : MonoBehaviour
         }
     }
 
-    public GameObject[] Notes;
     private ObjectPooler noteObjectPooler;
     private List<Note> notes = new List<Note>();
     private float x, z, startY;
@@ -37,7 +36,7 @@ public class NoteController : MonoBehaviour
     void MakeNote(Note note, int trail)
     {
         GameObject obj = noteObjectPooler.getObject(note.trail);
-        x = obj.transform.position.x;
+        x = -15.0f + 10.0f * trail;
         z = obj.transform.position.z;
         startY = 180.0f;
         obj.transform.position = new Vector3(x, startY, z);
