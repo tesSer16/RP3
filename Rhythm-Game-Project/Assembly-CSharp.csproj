@@ -53,12 +53,20 @@
     <UnityVersion>2020.3.20f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\NoteBehavior.cs" />
-    <Compile Include="Assets\Scripts\NoteController.cs" />
-    <Compile Include="Assets\Scripts\ObjectPooler.cs" />
-    <Compile Include="Assets\Scripts\Info.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\SongSelectManager.cs" />
+    <Compile Include="Assets\Scripts\Game\NoteBehavior.cs" />
+    <Compile Include="Assets\Scripts\Game\NoteController.cs" />
+    <Compile Include="Assets\Scripts\Game\ObjectPooler.cs" />
+    <Compile Include="Assets\Scripts\Info.cs" />
+    <Compile Include="Assets\Scripts\Game\GameManager.cs" />
+    <Compile Include="Assets\Scripts\ButtonManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Resources\Charts\test - 복사본 (3).txt" />
+    <None Include="Assets\Resources\Charts\test - 복사본 (2).txt" />
+    <None Include="Assets\Resources\Charts\test - 복사본.txt" />
+    <None Include="Assets\Resources\Charts\test.txt" />
+    <None Include="Assets\Resources\Charts\test - 복사본 (4).txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
