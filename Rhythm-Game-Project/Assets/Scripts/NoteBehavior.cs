@@ -14,15 +14,18 @@ public class NoteBehavior : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Perfect")
+        if (other.tag == "Superfect")
         {
-            judge = GameManager.judges.PERFECT;
             if (GameManager.instance.automode)
             {
                 //KeySoundManager.instance.audioSource.Play();
                 GameManager.instance.processJudge(judge);
                 gameObject.SetActive(false);
             }
+        }
+        else if (other.tag == "Perfect")
+        {
+            judge = GameManager.judges.PERFECT;
             //Debug.Log(other.tag);
         }
         else if (other.tag == "Good")

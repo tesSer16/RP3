@@ -55,44 +55,42 @@ public class GameManager : MonoBehaviour
     private ObjectPooler objectPooler;
     void Update()
     {
-        /*foreach (GameObject trail in trails)
+        if (Input.touchCount > 0)
         {
-            trail.GetComponent<Renderer>().material.color = Color.black;
-        }
-        Ray ray = _mainCam.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-        {
-            hit.collider.gameObject.GetComponent<Renderer>().material.color = Color.white;
-        }*/
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = _mainCam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            for (int i = 0; i < Input.touchCount; i++)
             {
-                if (hit.collider.name == "Trail 1")
+                Touch tempTouch = Input.GetTouch(i);
+                if (tempTouch.phase == TouchPhase.Began)
                 {
-                    ShineTrail(0);
-                    objectPooler.Judge(0);
-                }
-                if (hit.collider.name == "Trail 2")
-                {
-                    ShineTrail(1);
-                    objectPooler.Judge(1);
-                }
-                if (hit.collider.name == "Trail 3")
-                {
-                    ShineTrail(2);
-                    objectPooler.Judge(2);
-                }
-                if (hit.collider.name == "Trail 4")
-                {
-                    ShineTrail(3);
-                    objectPooler.Judge(3);
+                    Ray ray = _mainCam.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                    {
+                        if (hit.collider.name == "Trail 1")
+                        {
+                            ShineJudge(0);
+                        }
+                        if (hit.collider.name == "Trail 2")
+                        {
+                            ShineJudge(1);
+                        }
+                        if (hit.collider.name == "Trail 3")
+                        {
+                            ShineJudge(2);
+                        }
+                        if (hit.collider.name == "Trail 4")
+                        {
+                            ShineJudge(3);
+                        }
+                    }
                 }
             }
         }
+
+        if (Input.GetKey(KeyCode.S)) ShineJudge(0);
+        if (Input.GetKey(KeyCode.D)) ShineJudge(1);
+        if (Input.GetKey(KeyCode.L)) ShineJudge(2);
+        if (Input.GetKey(KeyCode.Semicolon)) ShineJudge(3);
 
         for (int i = 0; i < trailRenderers.Length; i++)
         {
@@ -102,11 +100,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ShineTrail(int idx)
+    public void ShineJudge(int trail)
     {
-        Color color = trailRenderers[idx].material.color;
+        Color color = trailRenderers[trail].material.color;
         color.a = 0.32f;
-        trailRenderers[idx].material.color = color;
+        trailRenderers[trail].material.color = color;
+        objectPooler.Judge(trail);
     }
 
     private float perfectScore;
