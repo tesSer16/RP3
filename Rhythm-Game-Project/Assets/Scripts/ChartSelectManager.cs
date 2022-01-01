@@ -32,8 +32,10 @@ public class ChartSelectManager : MonoBehaviour
             GameObject chart = Instantiate(chartPrefab) as GameObject;
             chart.transform.SetParent(Content.transform, false);
 
-            // 실제로 파일이 있는지 확인
-            FileInfo fi = new FileInfo(charts[i][2]);
+            // 실제로 파일이 있는지 확인 (현재 illegal character issue)
+            Debug.Log(charts[i][2]);
+            string temp = "C:/Users/user/Downloads/MUSIC & Helper/MUSIC 7.3.0/Types α/Type F/[Arcaea] Fracture Ray - Sakuzyo.mp3";
+            FileInfo fi = new FileInfo(temp);
 
             if (fi.Exists)
             {
@@ -52,7 +54,7 @@ public class ChartSelectManager : MonoBehaviour
         // Content size 설정
         ScrollRect scrollRect = scrollView.GetComponent<ScrollRect>();
         float width = scrollRect.content.rect.width;
-        float height = 160 * files.Length + 120;
+        float height = 160 * files.Length + 100;
         scrollRect.content.sizeDelta = new Vector2(width, height);
     }
 
