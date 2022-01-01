@@ -53,13 +53,14 @@
     <UnityVersion>2020.3.20f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\SongSelectManager.cs" />
+    <Compile Include="Assets\Scripts\ButtonManager.cs" />
+    <Compile Include="Assets\Scripts\ChartSelectManager.cs" />
     <Compile Include="Assets\Scripts\Game\NoteBehavior.cs" />
     <Compile Include="Assets\Scripts\Game\NoteController.cs" />
     <Compile Include="Assets\Scripts\Game\ObjectPooler.cs" />
     <Compile Include="Assets\Scripts\Info.cs" />
     <Compile Include="Assets\Scripts\Game\GameManager.cs" />
-    <Compile Include="Assets\Scripts\ButtonManager.cs" />
+    <Compile Include="Assets\Scripts\SongSelectManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Charts\test - 복사본 (3).txt" />
