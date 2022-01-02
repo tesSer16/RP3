@@ -18,4 +18,5 @@ public class Info
     public static int order { get; set; }
     public static List<Queue<int>> Chart { get; set; }
     public static float beatInterval { get; set; }
+    public static string musicPath { get; set; }
 }

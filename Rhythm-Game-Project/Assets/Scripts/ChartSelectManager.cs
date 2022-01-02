@@ -34,8 +34,7 @@ public class ChartSelectManager : MonoBehaviour
 
             // 실제로 파일이 있는지 확인 (현재 illegal character issue)
             Debug.Log(charts[i][2]);
-            string temp = "C:/Users/user/Downloads/MUSIC & Helper/MUSIC 7.3.0/Types α/Type F/[Arcaea] Fracture Ray - Sakuzyo.mp3";
-            FileInfo fi = new FileInfo(temp);
+            FileInfo fi = new FileInfo(charts[i][2]);
 
             if (fi.Exists)
             {
@@ -47,7 +46,7 @@ public class ChartSelectManager : MonoBehaviour
                 chart.GetComponentInChildren<Text>().text = string.Format(" {0}\n   - 위치 정보가 올바르지 않습니다.", charts[i][0]);
             }
 
-            }
+        }
         GameObject add = Instantiate(addPrefab) as GameObject;
         add.transform.SetParent(Content.transform, false);
 

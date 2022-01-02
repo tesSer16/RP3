@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.IO;
+using System;
 
 public class SongSelectManager : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class SongSelectManager : MonoBehaviour
     public GameObject FG;
     public GameObject MG;
     public GameObject scrollView;
+
     void Start()
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -49,8 +52,17 @@ public class SongSelectManager : MonoBehaviour
         }
 
         // 예외 처리 필요 UnauthorizedAccessException
-        folders = Directory.GetDirectories(_path);
-        files = Directory.GetFiles(_path);
+        try
+        {
+            folders = Directory.GetDirectories(_path);
+            files = Directory.GetFiles(_path);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            Debug.Log("접근 권한이 없습니다.");
+            Back();
+        }
+            
         // 디렉토리 오브젝트 생성
         int n = 0, m = 0;
         foreach (string folder in folders)
@@ -72,7 +84,7 @@ public class SongSelectManager : MonoBehaviour
             FileInfo fi = new FileInfo(file);
             if (fi.Extension == ".mp3")
             {
-                GameObject f = Instantiate(FG) as GameObject;
+                GameObject f = Instantiate(MG) as GameObject;
                 f.transform.SetParent(Content.transform, false);
                 
                 f.GetComponentInChildren<Text>().text = fi.Name;
@@ -98,6 +110,7 @@ public class SongSelectManager : MonoBehaviour
 
     public void Play(string name)
     {
-        Debug.Log(_path + name);
+        Info.musicPath = _path + '/' + name;
+        SceneManager.LoadScene("MakerScene");
     }
 }
