@@ -51,14 +51,12 @@ public class ChartSelectManager : MonoBehaviour
         GameObject add = Instantiate(addPrefab) as GameObject;
         add.transform.SetParent(Content.transform, false);
 
-        // Content size 설정
-        ScrollRect scrollRect = scrollView.GetComponent<ScrollRect>();
-        float width = scrollRect.content.rect.width;
-        float height = 160 * files.Length + 100;
-        scrollRect.content.sizeDelta = new Vector2(width, height);
-    }
-
-    
+        //// Content size 설정
+        //ScrollRect scrollRect = scrollView.GetComponent<ScrollRect>();
+        //float width = scrollRect.content.rect.width;
+        //float height = 160 * files.Length + 100;
+        //scrollRect.content.sizeDelta = new Vector2(width, height);
+    }    
 
     void Update()
     {

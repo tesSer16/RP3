@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.IO;
 
 public class SongSelectManager : MonoBehaviour
 {
     private string _path;
+    private string origin;
     private string[] files;
     private string[] folders;
     public GameObject Content;
@@ -24,6 +26,7 @@ public class SongSelectManager : MonoBehaviour
         {
             _path = "C:/";
         }
+        origin = string.Copy(_path);
 
         FileUpdate();
     }
@@ -39,7 +42,13 @@ public class SongSelectManager : MonoBehaviour
                 Destroy(c.gameObject);
             }
         }
+        if (_path != origin)
+        {
+            GameObject b = Instantiate(BG) as GameObject;
+            b.transform.SetParent(Content.transform, false);
+        }
 
+        // 예외 처리 필요 UnauthorizedAccessException
         folders = Directory.GetDirectories(_path);
         files = Directory.GetFiles(_path);
         // 디렉토리 오브젝트 생성
@@ -47,7 +56,6 @@ public class SongSelectManager : MonoBehaviour
         foreach (string folder in folders)
         {
             FileInfo fi = new FileInfo(folder);
-            Debug.Log(fi.Name);
             if (fi.Name[0] != '$')
             {
                 GameObject f = Instantiate(FG) as GameObject;
@@ -71,16 +79,25 @@ public class SongSelectManager : MonoBehaviour
                 m++;
             }
         }
-
-        // Content size 설정
-        ScrollRect scrollRect = scrollView.GetComponent<ScrollRect>();
-        float width = 1400.0f;
-        float height = 150 * (n + m) + 20;
-        scrollRect.content.sizeDelta = new Vector2(width, height);
+    }
+    
+    public void Next(string name)
+    {
+        if (_path != "C:/") _path += '/';
+        _path += name;
+        FileUpdate();
     }
 
-    public void NextFolder()
+    public void Back()
     {
+        FileInfo fi = new FileInfo(_path);
+        _path = _path.Replace('/' + fi.Name, "");
+        if (_path == "C:") _path += '/';
+        FileUpdate();
+    }
 
+    public void Play(string name)
+    {
+        Debug.Log(_path + name);
     }
 }
