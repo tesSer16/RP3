@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
 
     // note variables
     public enum judges { NONE = 0, BAD, GOOD, PERFECT, MISS };
+    public GameObject noteObjectPooler;
+    private ObjectPooler objectPooler;
 
     private void Start()
     {
@@ -35,6 +37,7 @@ public class GameManager : MonoBehaviour
             trailRenderers[i] = trails[i].GetComponent<Renderer>();
         }
 
+        // 판정선 맞추기
         GameObject p, g1, g2, b1, b2, m;
         p = GameObject.Find("Perfect Line");
         g1 = GameObject.Find("Good Line (1)");
@@ -50,9 +53,7 @@ public class GameManager : MonoBehaviour
         b2.transform.Translate(Vector3.right * (0.5f * noteSpeed));
         m.transform.Translate(Vector3.right * (1.0f * noteSpeed));
     }
-
-    public GameObject noteObjectPooler;
-    private ObjectPooler objectPooler;
+    
     void Update()
     {
         if (Input.touchCount > 0)
