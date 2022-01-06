@@ -14,7 +14,6 @@ public class MakerManager : MonoBehaviour
     // Maker variable
     public GameObject[] trails;
     private Renderer[] trailRenderers;
-    private float noteSpeed = 10.0f;
 
     void Start()
     {

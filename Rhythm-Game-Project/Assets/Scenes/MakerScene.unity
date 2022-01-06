@@ -972,7 +972,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 400, y: 400}
+  m_AnchoredPosition: {x: 400, y: 380}
   m_SizeDelta: {x: 250, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &311799117
@@ -2280,6 +2280,7 @@ GameObject:
   - component: {fileID: 1321615950}
   - component: {fileID: 1321615949}
   - component: {fileID: 1321615948}
+  - component: {fileID: 1321615951}
   m_Layer: 0
   m_Name: Chart Controller
   m_TagString: Untagged
@@ -2398,6 +2399,7 @@ MonoBehaviour:
   progressBar: {fileID: 1694061818}
   pButton: {fileID: 272358961}
   timeText: {fileID: 311799117}
+  background: {fileID: 1054881427}
 --- !u!4 &1321615950
 Transform:
   m_ObjectHideFlags: 0
@@ -2412,6 +2414,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1321615951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321615947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a9afaa616a070f45a383c6f4ca7eb0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Note: {fileID: 5737716514523907240, guid: f5eb36029e89a844da828a3b05819928, type: 3}
+  noteCount: 10
 --- !u!1 &1612531651
 GameObject:
   m_ObjectHideFlags: 0
@@ -2626,7 +2642,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1321615949}
         m_TargetAssemblyTypeName: ChartController, Assembly-CSharp
-        m_MethodName: Pause
+        m_MethodName: Save
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3109,7 +3125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1959117485}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35, y: 100, z: -20}
+  m_LocalPosition: {x: 35, y: 92, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

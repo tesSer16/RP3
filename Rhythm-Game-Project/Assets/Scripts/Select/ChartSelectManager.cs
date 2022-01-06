@@ -16,11 +16,10 @@ public class ChartSelectManager : MonoBehaviour
     {
         // Chart 파일 읽어오기
         string[] files;
-        files = Directory.GetFiles(Application.persistentDataPath + "/Charts", "*.txt");
+        files = Directory.GetFiles(Application.dataPath + "/Resources/Charts", "*.txt");
         List<string[]> charts = new List<string[]>();
         for (int i = 0; i < files.Length; i++)
         {
-            FileInfo fileInfo = new FileInfo(files[i]);
             StreamReader reader = new StreamReader(files[i]);
             charts.Add(reader.ReadToEnd().Split('\n'));
             reader.Close();
@@ -29,7 +28,7 @@ public class ChartSelectManager : MonoBehaviour
         // Content에 게임 오브젝트 생성 
         for (int i = 0; i < files.Length; i++)
         {
-            GameObject chart = Instantiate(chartPrefab) as GameObject;
+            GameObject chart = Instantiate(chartPrefab);
             chart.transform.SetParent(Content.transform, false);
 
             // 실제로 파일이 있는지 확인 (현재 illegal character issue)
@@ -47,7 +46,7 @@ public class ChartSelectManager : MonoBehaviour
             }
 
         }
-        GameObject add = Instantiate(addPrefab) as GameObject;
+        GameObject add = Instantiate(addPrefab);
         add.transform.SetParent(Content.transform, false);
 
         //// Content size 설정
