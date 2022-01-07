@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ChartController : MonoBehaviour
 {
@@ -25,7 +26,6 @@ public class ChartController : MonoBehaviour
     private bool finished = false;
 
     StreamWriter sw;
-    string chartName;
     string _path;
 
     private bool[] recordCooldowns;
@@ -42,9 +42,7 @@ public class ChartController : MonoBehaviour
 
         // 음악 불러오기
         audioSource = GetComponent<AudioSource>();
-        string temp = "[Arcaea] Axium Crisis - ak+q";
-        // music.clip = Resources.Load<AudioClip>("Music/" + Info.musicTitle);
-        music = Resources.Load<AudioClip>("Music/" + temp);
+        music = Resources.Load<AudioClip>("Music/" + Info.musicTitle);
         audioSource.clip = music;
 
         // 음악 진행 상황 텍스트 
@@ -53,11 +51,11 @@ public class ChartController : MonoBehaviour
 
         // 텍스트 파일 생성 (끝값 오류 방지 +1)
         maxOrder = Convert.ToInt32(music.frequency * music.length) / 1024 + 1;
-        chartName = "test_chart";
-        _path = "Assets/Resources/Charts/" + chartName + ".txt";
+        _path = "Assets/Resources/Charts/" + Info.chartTitle + ".txt";
         if (!File.Exists(_path))
         {
             sw = new StreamWriter(_path);
+            sw.WriteLine(Info.musicTitle);
             for (int i = 0; i < maxOrder; i++)
             {
                 sw.WriteLine("0000");
@@ -67,6 +65,7 @@ public class ChartController : MonoBehaviour
         }
 
         StreamReader reader = new StreamReader(_path);
+        reader.ReadLine();
         string[] lines = reader.ReadToEnd().Split('\n');
 
         if (lines.Length != maxOrder + 1)
@@ -225,6 +224,7 @@ public class ChartController : MonoBehaviour
         if (!audioSource.isPlaying)
         {
             sw = new StreamWriter(_path);
+            sw.WriteLine(Info.musicTitle);
             for (int i = 0; i < maxOrder; i++)
             {
                 string data = "";
@@ -243,6 +243,11 @@ public class ChartController : MonoBehaviour
         {
             Debug.Log("정지 상태에서만 저장이 가능합니다.");
         }
+    }
+
+    public void Quit()
+    {
+        SceneManager.LoadScene("ChartSelectScene");
     }
 
     public void Pause()

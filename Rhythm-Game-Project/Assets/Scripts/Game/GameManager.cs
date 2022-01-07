@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class GameManager : MonoBehaviour
     private Renderer[] trailRenderers;
     public float score;
     public int combo;
+    public Text count;
+    public Text judgeText;
+    public GameObject judgeObj;
 
     // note variables
     public enum judges { NONE = 0, BAD, GOOD, PERFECT, MISS };
@@ -46,12 +50,14 @@ public class GameManager : MonoBehaviour
         b2 = GameObject.Find("Bad Line (2)");
         m = GameObject.Find("Miss Line");
         
-        b1.transform.Translate(Vector3.left * (1.0f * noteSpeed));
-        g1.transform.Translate(Vector3.left * (0.5f * noteSpeed));
-        p.transform.Translate(Vector3.left * (0.15f * noteSpeed));
-        g2.transform.Translate(Vector3.right * (0.15f * noteSpeed));
-        b2.transform.Translate(Vector3.right * (0.5f * noteSpeed));
-        m.transform.Translate(Vector3.right * (1.0f * noteSpeed));
+        b1.transform.Translate(Vector3.left * (1.2f * noteSpeed));
+        g1.transform.Translate(Vector3.left * (0.7f * noteSpeed));
+        p.transform.Translate(Vector3.left * (0.2f * noteSpeed));
+        g2.transform.Translate(Vector3.right * (0.2f * noteSpeed));
+        b2.transform.Translate(Vector3.right * (0.7f * noteSpeed));
+        m.transform.Translate(Vector3.right * (1.2f * noteSpeed));
+
+        judgeText.text = "";
     }
     
     void Update()
@@ -145,6 +151,7 @@ public class GameManager : MonoBehaviour
             combo += 1;
         }
         // showJudgement();
-        Debug.Log(judge);
+        judgeText.text = $"{judge}\n{combo}";
+        judgeObj.GetComponent<Animation>().Play();
     }
 }

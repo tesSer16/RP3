@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.IO;
 using System;
+using UnityEngine.Networking;
 
 public class SongSelectManager : MonoBehaviour
 {
@@ -24,6 +26,8 @@ public class SongSelectManager : MonoBehaviour
         if (Application.platform == RuntimePlatform.Android)
         {
             _path = (Application.persistentDataPath.Replace("Android", "")).Split(new string[] { "//" }, System.StringSplitOptions.None)[0];
+            Permission.RequestUserPermission(Permission.ExternalStorageRead);
+            Permission.RequestUserPermission(Permission.ExternalStorageWrite);
         }
         else
         {
@@ -51,7 +55,7 @@ public class SongSelectManager : MonoBehaviour
             b.transform.SetParent(Content.transform, false);
         }
 
-        // 예외 처리 필요 UnauthorizedAccessException
+        // 예외 처리
         try
         {
             folders = Directory.GetDirectories(_path);
@@ -64,17 +68,15 @@ public class SongSelectManager : MonoBehaviour
         }
             
         // 디렉토리 오브젝트 생성
-        int n = 0, m = 0;
         foreach (string folder in folders)
         {
             FileInfo fi = new FileInfo(folder);
             if (fi.Name[0] != '$')
             {
-                GameObject f = Instantiate(FG) as GameObject;
+                GameObject f = Instantiate(FG);
                 f.transform.SetParent(Content.transform, false);
 
                 f.GetComponentInChildren<Text>().text = fi.Name;
-                n++;
             }
         }
 
@@ -84,11 +86,10 @@ public class SongSelectManager : MonoBehaviour
             FileInfo fi = new FileInfo(file);
             if (fi.Extension == ".mp3")
             {
-                GameObject f = Instantiate(MG) as GameObject;
+                GameObject f = Instantiate(MG);
                 f.transform.SetParent(Content.transform, false);
-                
+
                 f.GetComponentInChildren<Text>().text = fi.Name;
-                m++;
             }
         }
     }
@@ -110,11 +111,23 @@ public class SongSelectManager : MonoBehaviour
 
     public void Play(string name)
     {
-        Info.musicPath = _path + '/' + name;
         Info.musicTitle = name.Substring(0, name.Length - 4);
-        Debug.Log(Info.musicTitle);
-        File.Copy(_path + '/' + name, Application.dataPath + "/Resources/Music/" + name, true);
+        StartCoroutine(DL(_path + '/' + name, Application.dataPath + "/Resources/Music/" + name));
+
+        //File.Copy(_path + '/' + name, Application.dataPath + "/Resources/Music/" + name, true);
         // 로딩 추가 고려, 기존 파일 탐색
+    }
+
+    IEnumerator DL(string path, string target)
+    {
+        if (!File.Exists(target))
+        {
+            var request = UnityWebRequest.Get(path);
+            var download = new DownloadHandlerFile(target);
+            request.downloadHandler = download;
+            yield return request.SendWebRequest();
+        }
+        yield return new WaitForSeconds(2.0f);
         SceneManager.LoadScene("MakerScene");
     }
 }

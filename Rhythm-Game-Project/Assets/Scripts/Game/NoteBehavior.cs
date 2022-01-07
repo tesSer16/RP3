@@ -5,12 +5,10 @@ using UnityEngine;
 public class NoteBehavior : MonoBehaviour
 {
     public GameManager.judges judge;
-    private float start;
 
     public void Initialize()
     {
         judge = GameManager.judges.NONE;
-        start = Time.time;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -18,6 +16,7 @@ public class NoteBehavior : MonoBehaviour
         {
             if (GameManager.instance.automode)
             {
+                judge = GameManager.judges.PERFECT;
                 //KeySoundManager.instance.audioSource.Play();
                 GameManager.instance.processJudge(judge);
                 gameObject.SetActive(false);
@@ -59,6 +58,7 @@ public class NoteBehavior : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.down * GameManager.instance.noteSpeed * Time.deltaTime * 10);
+        if (NoteController.audioSource.isPlaying)
+            transform.Translate(Vector3.down * GameManager.instance.noteSpeed * Time.deltaTime * 10);
     }
 }

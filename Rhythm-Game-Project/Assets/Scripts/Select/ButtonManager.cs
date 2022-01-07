@@ -7,22 +7,25 @@ using UnityEngine.EventSystems;
 
 public class ButtonManager : MonoBehaviour
 {
-    public string songPath = "";
+    private string song = "";
+    private string chart = "";
     public void SelectSong()
     {
-        //GameObject obj = EventSystem.current.currentSelectedGameObject; -> 그냥 Get
-        //Debug.Log(obj.GetComponentInChildren<Text>().text);
-        Debug.Log(songPath);
+        Info.musicTitle = song;
+        Info.chartTitle = chart;
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void SetData(string name1, string name2)
+    {
+        song = name1;
+        chart = name2;
     }
 
     // Chart Select Scene
-    public void SetPath(string path)
-    {
-        songPath = path;
-    }
-
     public void MakeChart()
     {
+        // 팝업 띄워서 chartTitle 입력 (예정)
         SceneManager.LoadScene("SongSelectScene");
     }
 
