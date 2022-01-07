@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MakerManager : MonoBehaviour
 {
     // UI & scene variable
-    public Camera cam3d, cam2d;
+    public static Camera cam3d, cam2d;
     public Slider progressBar;
     public Button ccButton;
     public Button pButton;
@@ -17,6 +17,9 @@ public class MakerManager : MonoBehaviour
 
     void Start()
     {
+        cam2d = GameObject.Find("2D Camera").GetComponent<Camera>();
+        cam3d = GameObject.Find("Main Camera").GetComponent<Camera>();
+
         // 카메라 초기화
         cam3d.enabled = true;
         cam2d.enabled = false;
@@ -98,8 +101,8 @@ public class MakerManager : MonoBehaviour
             cam3d.enabled = false;
             cam2d.enabled = true;
             progressBar.GetComponent<RectTransform>().anchoredPosition = new Vector3(400, 520, 0);
-            ccButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(160, 400, 0);
-            pButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 400, 0);
+            ccButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(160, 380, 0);
+            pButton.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 380, 0);
             ccButton.GetComponentInChildren<Text>().text = "3D";
         }
         else

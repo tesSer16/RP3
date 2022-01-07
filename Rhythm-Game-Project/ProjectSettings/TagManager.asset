@@ -9,6 +9,8 @@ TagManager:
   - Bad
   - Miss
   - Superfect
+  - cam2d
+  - cam3d
   layers:
   - Default
   - TransparentFX

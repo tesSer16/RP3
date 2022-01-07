@@ -7,19 +7,22 @@ using UnityEngine.UI;
 
 public class ChartController : MonoBehaviour
 {
-    private AudioSource audioSource;
+    public static AudioSource audioSource;
     private AudioClip music;
-    private List<List<int>> Notes;
+    private static List<List<int>> Notes;
     public Slider progressBar;
     public Button pButton;
     public Text timeText;
+    public Text speedText;
 
     private string totalTime;
-    private float noteSpeed = 10.0f;
+    private float noteSpeed = 9.0f;
     private int maxOrder;
     private ChartPooler chartPooler;
-    private List<Queue<GameObject>> activeObject;
-    private int chartInterval;
+    public static int chartInterval;
+    private static int currentOrder;
+    private bool paused = true;
+    private bool finished = false;
 
     StreamWriter sw;
     string chartName;
@@ -28,7 +31,10 @@ public class ChartController : MonoBehaviour
     private bool[] recordCooldowns;
     private float recordCool;
 
-    public GameObject background;
+    public static bool clicked;
+
+    // 디버깅 변수
+
     void Start()
     {
         // 오브젝트 풀링
@@ -87,9 +93,15 @@ public class ChartController : MonoBehaviour
         recordCooldowns = new bool[4];
         for (int i = 0; i < 4; i++) recordCooldowns[i] = true;
 
+        // 초기화
+        clicked = false;
+        speedText.text = "9.0";
+        chartPooler = gameObject.GetComponent<ChartPooler>();
+        chartInterval = (int)(music.frequency * 110.0f / noteSpeed * 0.1) / 1024;
+        ChartUpdate(0);
+
         // 디버그
-        Debug.Log(background.GetComponent<Renderer>().bounds.size);
-        Debug.Log((int)(music.frequency * 110.0f / noteSpeed / 10) / 1024);
+        Debug.Log(music.length * music.frequency);
     }
 
     void Update()
@@ -102,21 +114,53 @@ public class ChartController : MonoBehaviour
         timeText.text = CalculatedTime();
 
         // chart update
-        chartInterval = (int)(music.frequency * 110.0f / noteSpeed / 10) / 1024;
-        int currentOrder = (int) (progressBar.value * music.length * music.frequency) / 1024;
-        
+        currentOrder = (int) (progressBar.value * music.length * music.frequency) / 1024;
+        /*
+        최적화 코드(슬라이더로 움직일 때는 일부 누락돼서 일단 빼놓음)
+        (9.0기준) 최적화 전 - 47 * 4 * 2번 탐색, 최적화 후 - 2 * 4번 탐색
+        for (int i = 0; i < 4; i++)
+        {
+            if (Notes[currentOrder][i] == 1)
+                chartPooler.SetObject(i, currentOrder);
+            if (maxOrder > currentOrder + chartInterval)
+            {
+                if (Notes[currentOrder + chartInterval][i] == 1)
+                    chartPooler.SetObject(i, currentOrder + chartInterval);
+            }
+        }
+        */
+
+        if (!clicked)
+        {
+            ChartUpdate(currentOrder);
+            chartPooler.PositionUpdate(currentOrder, chartInterval);
+        }
+
+        // 노래 종료
+        if (music.length * music.frequency - audioSource.timeSamples < 0)
+        {
+            paused = true;
+            finished = true;
+            pButton.GetComponentInChildren<Text>().text = "▶";
+        }
     }
 
-    public string CalculatedTime()
+    private string CalculatedTime()
     {
         int currentTime = Convert.ToInt32(progressBar.value * music.length);
         string current = $"{currentTime / 60}:{currentTime % 60:D2}";
         return $"{current} / {totalTime}";
     }
 
+    public static void EditNote(int a, int b, int c, int d)
+    {
+        Notes[b][a] = 0;
+        Notes[currentOrder + d][c] = 1;
+    }
+
     public void MakeNote(int trail)
     {
-        if (audioSource.isPlaying && recordCooldowns[trail])
+        if (recordCooldowns[trail])
         {
             Notes[audioSource.timeSamples / 1024][trail] = 1;
             StartCoroutine(RecordCoolTime(trail));
@@ -132,18 +176,48 @@ public class ChartController : MonoBehaviour
 
     private void ChartUpdate(int order)
     {
-        activeObject = new List<Queue<GameObject>>();
         for (int i = 0; i < 4; i++)
         {
-            activeObject.Add(new Queue<GameObject>());
-            for (int k = 0; k < chartInterval; k++)
+            for (int j = 0; j < chartPooler.NotePools[i].Count; j++)
             {
-                if (Notes[order + k][i] == 1)
+                chartPooler.NotePools[i][j].SetActive(false);
+                chartPooler.NotePools[i][j].GetComponent<ChartBehavior>().order = -1;
+            }
+
+            if (maxOrder > order + chartInterval)
+            {
+                for (int k = 0; k < chartInterval; k++)
                 {
-                    Debug.Log(1);
+                    if (Notes[order + k][i] == 1)
+                    {
+                        chartPooler.SetObject(i, order + k);
+                    }
                 }
             }
         }
+    }
+
+    public void SpeedUp1()
+    {
+        ChangeSpeed(0.1f);
+    }
+    public void SpeedUp10()
+    {
+        ChangeSpeed(1.0f);
+    }
+    public void SpeedDown1()
+    {
+        ChangeSpeed(-0.1f);
+    }
+    public void SpeedDown10()
+    {
+        ChangeSpeed(-1.0f);
+    }
+    private void ChangeSpeed(float value)
+    {
+        noteSpeed = Mathf.Clamp(noteSpeed + value, 2.0f, 13.0f);
+        chartInterval = (int)(music.frequency * 110.0f / noteSpeed * 0.1) / 1024;
+        speedText.text = $"{noteSpeed:0.0}";
     }
 
     public void Save()
@@ -175,11 +249,19 @@ public class ChartController : MonoBehaviour
     {
         if (audioSource.isPlaying)
         {
+            paused = true;
             audioSource.Pause();
             pButton.GetComponentInChildren<Text>().text = "▶";
         }
         else
         {
+            if (finished) 
+            {
+                audioSource.time = 0;
+                finished = false;
+            }
+            
+            paused = false;
             audioSource.Play();
             pButton.GetComponentInChildren<Text>().text = "II";
         }
@@ -188,7 +270,9 @@ public class ChartController : MonoBehaviour
     public void OnPointerUp()
     {
         audioSource.time = Mathf.Clamp(progressBar.value * music.length, 0, music.length - 0.00001f);
-        audioSource.Play();
+        if (!paused)
+            audioSource.UnPause();        
+        ChartUpdate(currentOrder);
     }
 
     public void OnPointerDown()
