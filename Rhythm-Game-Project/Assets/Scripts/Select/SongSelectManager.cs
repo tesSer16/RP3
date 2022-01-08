@@ -111,11 +111,12 @@ public class SongSelectManager : MonoBehaviour
 
     public void Play(string name)
     {
-        Info.musicTitle = name.Substring(0, name.Length - 4);
-        StartCoroutine(DL(_path + '/' + name, Application.dataPath + "/Resources/Music/" + name));
-
-        //File.Copy(_path + '/' + name, Application.dataPath + "/Resources/Music/" + name, true);
         // 로딩 추가 고려, 기존 파일 탐색
+        Info.musicTitle = name.Substring(0, name.Length - 4);
+        // StartCoroutine(DL(_path + '/' + name, Application.dataPath + "/Resources/Music/" + name));
+
+        Info.musicPath = _path + '/' + name;
+        SceneManager.LoadScene("MakerScene");
     }
 
     IEnumerator DL(string path, string target)

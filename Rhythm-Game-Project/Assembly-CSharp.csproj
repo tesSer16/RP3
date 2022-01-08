@@ -68,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Charts\Chart 4.txt" />
+    <None Include="Assets\Resources\Charts\cccc4.txt" />
+    <None Include="Assets\Resources\Charts\cccc1.txt" />
     <None Include="Assets\Resources\Charts\test_chart.txt" />
     <None Include="Assets\Resources\Charts\test.txt" />
     <None Include="Assets\Resources\Charts\prototype.txt" />

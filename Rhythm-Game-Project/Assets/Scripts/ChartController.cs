@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class ChartController : MonoBehaviour
 {
@@ -35,18 +36,38 @@ public class ChartController : MonoBehaviour
 
     // 디버깅 변수
 
-    void Start()
+    IEnumerator LoadMusic(string path)
     {
-        // 오브젝트 풀링
-        chartPooler = GetComponent<ChartPooler>();
+        if (File.Exists(path))
+        {
+            Info.chartTitle = "cccc4";
+            string temp = "file://C:/test/%5bArcaea%5d+Axium+Crisis+-+ak%2bq.mp3";
+            string _path = System.Web.HttpUtility.UrlEncode(@"file://" + @"C:/test/[Arcaea] Axium Crisis - ak+q.mp3");
+            _path = _path.Replace("%3a", ":");
+            _path = _path.Replace("%2f", "/");
+            UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(_path, AudioType.MPEG);
+            yield return uwr.SendWebRequest();
 
-        // 음악 불러오기
-        audioSource = GetComponent<AudioSource>();
-        music = Resources.Load<AudioClip>("Music/" + Info.musicTitle);
-        audioSource.clip = music;
+            //if (uwr.isNetworkError || uwr.isHttpError)
+            //{
+            //    Debug.LogError(uwr.error);
+            //    yield break;
+            //}
+            music = DownloadHandlerAudioClip.GetContent(uwr);
 
+            Debug.Log("Playing song using Audio Source!");
+            audioSource = GetComponent<AudioSource>();
+            //music = Resources.Load<AudioClip>("Music/" + Info.musicTitle);
+            audioSource.clip = music;
+
+            Initiate();
+        }
+    }
+
+    void Initiate()
+    {
         // 음악 진행 상황 텍스트 
-        totalTime = $"{(int) music.length / 60}:{(int) music.length % 60:D2}";
+        totalTime = $"{(int)music.length / 60}:{(int)music.length % 60:D2}";
         timeText.text = CalculatedTime();
 
         // 텍스트 파일 생성 (끝값 오류 방지 +1)
@@ -98,51 +119,61 @@ public class ChartController : MonoBehaviour
         chartPooler = gameObject.GetComponent<ChartPooler>();
         chartInterval = (int)(music.frequency * 110.0f / noteSpeed * 0.1) / 1024;
         ChartUpdate(0);
+    }
+
+    void Start()
+    {
+        // 오브젝트 풀링
+        chartPooler = GetComponent<ChartPooler>();
+
+        // 음악 불러오기
+        Debug.Log(Info.musicPath);
+        StartCoroutine(LoadMusic(Info.musicPath));
 
         // 디버그
-        Debug.Log(music.length * music.frequency);
+        // Debug.Log(music.length * music.frequency);
     }
 
-    void Update()
-    {
-        // progressbar update
-        if (audioSource.isPlaying)
-            progressBar.value = audioSource.time / music.length;
+    //void Update()
+    //{
+    //    // progressbar update
+    //    if (audioSource.isPlaying)
+    //        progressBar.value = audioSource.time / music.length;
 
-        //time update
-        timeText.text = CalculatedTime();
+    //    //time update
+    //    timeText.text = CalculatedTime();
 
-        // chart update
-        currentOrder = (int) (progressBar.value * music.length * music.frequency) / 1024;
-        /*
-        최적화 코드(슬라이더로 움직일 때는 일부 누락돼서 일단 빼놓음)
-        (9.0기준) 최적화 전 - 47 * 4 * 2번 탐색, 최적화 후 - 2 * 4번 탐색
-        for (int i = 0; i < 4; i++)
-        {
-            if (Notes[currentOrder][i] == 1)
-                chartPooler.SetObject(i, currentOrder);
-            if (maxOrder > currentOrder + chartInterval)
-            {
-                if (Notes[currentOrder + chartInterval][i] == 1)
-                    chartPooler.SetObject(i, currentOrder + chartInterval);
-            }
-        }
-        */
+    //    // chart update
+    //    currentOrder = (int) (progressBar.value * music.length * music.frequency) / 1024;
+    //    /*
+    //    최적화 코드(슬라이더로 움직일 때는 일부 누락돼서 일단 빼놓음)
+    //    (9.0기준) 최적화 전 - 47 * 4 * 2번 탐색, 최적화 후 - 2 * 4번 탐색
+    //    for (int i = 0; i < 4; i++)
+    //    {
+    //        if (Notes[currentOrder][i] == 1)
+    //            chartPooler.SetObject(i, currentOrder);
+    //        if (maxOrder > currentOrder + chartInterval)
+    //        {
+    //            if (Notes[currentOrder + chartInterval][i] == 1)
+    //                chartPooler.SetObject(i, currentOrder + chartInterval);
+    //        }
+    //    }
+    //    */
 
-        if (!clicked)
-        {
-            ChartUpdate(currentOrder);
-            chartPooler.PositionUpdate(currentOrder, chartInterval);
-        }
+    //    if (!clicked)
+    //    {
+    //        ChartUpdate(currentOrder);
+    //        chartPooler.PositionUpdate(currentOrder, chartInterval);
+    //    }
 
-        // 노래 종료
-        if (music.length * music.frequency - audioSource.timeSamples < 0)
-        {
-            paused = true;
-            finished = true;
-            pButton.GetComponentInChildren<Text>().text = "▶";
-        }
-    }
+    //    // 노래 종료
+    //    if (music.length * music.frequency - audioSource.timeSamples < 0)
+    //    {
+    //        paused = true;
+    //        finished = true;
+    //        pButton.GetComponentInChildren<Text>().text = "▶";
+    //    }
+    //}
 
     private string CalculatedTime()
     {
